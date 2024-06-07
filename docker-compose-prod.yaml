@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  gateway:
+    container_name: gateway
+    image: smalvik/nxa-tgb-gateway:0.1.0
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+
+  frontend:
+    container_name: frontend
+    image: smalvik/nxa-tgb-frontend:0.1.0
+    ports:
+      - "3000:5173"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    container_name: backend
+    image: smalvik/nxa-tgb-backend:0.1.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: curl -H "apollo-require-preflight:true" -f http://backend:4000/graphql?query=%7B__typename%7D
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "4000:4000"
+    tty: true
+
+  postgres:
+    container_name: postgres
+    image: postgres:15.3-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: app
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres:

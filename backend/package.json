@@ -1,0 +1,37 @@
+{
+  "name": "backend-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "compile": "npx tsc",
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev --name init",
+    "dev": "nodemon dist/index.js",
+    "generate-and-start": "npx prisma migrate dev --name init && npx tsc && nodemon dist/index.js",
+    "build": "npx tsc && npx prisma generate",
+    "format": "npx prettier . --write",
+    "check-format": "npx prettier . --check"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@prisma/client": "^5.14.0",
+    "@types/node": "^20.4.1",
+    "nodemon": "^3.1.2",
+    "prettier": "3.2.5",
+    "prisma": "^5.14.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.5",
+    "colors": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "graphql": "^16.7.1",
+    "graphql-scalars": "^1.22.2"
+  }
+}
